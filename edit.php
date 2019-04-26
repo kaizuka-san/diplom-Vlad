@@ -83,43 +83,39 @@
         </p>
     </form>
 
-<!-- form table `maps` -->
-    <form method="post" class="disable edit-maps">
+<!-- form table `practic` -->
+    <form method="post" class="disable edit-practic">
          <p>
-            <select name='select-maps' id="select-maps"></select>
+            <select name='select-practic' id="select-practic"></select>
          </p>
-        <button id="edi-t-maps" name="ed-maps">Изменить</button>
-        <button id="delete-maps" name="del-maps">Удалить</button>
+        <button id="edi-t-practic" name="ed-practic">Изменить</button>
+        <button id="delete-practic" name="del-practic">Удалить</button>
         <button name="back-click">Back</button>
     </form>
-    <form method="post" class="disable maps">
+    <form method="post" class="disable practic">
         <div class="disable hide-add">
-            <label>№ метки</label>
+            <label>№ задания</label>
             <p>
-                <input type="text" readonly id="map-id" name="map_id">
+                <input type="text" readonly id="prac-id" name="prac_id">
             </p>
         </div>
-        <label>Название метки </label>
+        <label>Название задания </label>
         <p>
-            <input type="text" id="name_map" name="add_name_map">
+            <input type="text" id="name_prac" name="add_name_prac">
         </p>
-        <label>Описание метки</label>
+        <label>Описание задания</label>
         <p>
-            <textarea class="description_map" id="desc-map" maxlength="150" name="add_description_map"></textarea>
+            <textarea class="description_prac" id="desc-prac" maxlength="150" name="add_description_prac"></textarea>
         </p>
         <label>Пользователь</label>
         <p>
-            <select name="add_map_user_id" id="us_map"></select>
+            <select name="add_prac_user_id" id="us_prac"></select>
         </p>
-        <label>Широта</label>
+        <label>Лекция</label>
         <p>
-            <input type="text" id="lat" name="add_latitude">
+            <select id="lat" name="add_less_id"></select>
         </p>
-        <label>Долгота</label>
-        <p>
-            <input type="text" id="lan" name="add_langitude">
-        </p>
-        <button name="add_maps_click">Выполнить</button>
+        <button name="add_practic_click">Выполнить</button>
         <p>
             <button name="back-click">Back</button>
         </p>
@@ -172,20 +168,20 @@
         $(window).on('DOMContentLoaded', function (){
             if (method == 'add') {
                 if (session == 1) {
-                    document.title = 'Добавить статью';
+                    document.title = 'Добавить лекцию';
                     $(".lesson").removeClass('disable');
                     $(".lesson").addClass('active');
-                } else if (session === 2) { //FIXME: show form
-                    document.title = 'Добавить в галерею';
+                } else if (session == 2) {
+                    document.title = "Добавить задание";
+                    $(".practic").removeClass('disable');
+                    $(".practic").addClass('active');
+
+                    $(".practic-show").removeClass('disable');
+                    $(".practic-show").addClass('active');
+                } else if (session === 3) { //FIXME: show form
+                    document.title = 'Добавить тест';
                     $(".gallery").removeClass('disable');
                     $(".gallery").addClass('active');
-                } else if (session == 3) {
-                    document.title = "Добавить метку на карте";
-                    $(".maps").removeClass('disable');
-                    $(".maps").addClass('active');
-
-                    $(".maps-show").removeClass('disable');
-                    $(".maps-show").addClass('active');
                 } else if (session == 4) {
                     document.title = "Добавить пользователя";
                     $(".user").removeClass('disable');
@@ -199,7 +195,7 @@
                     let user_view = '<?php for ($i = 0; $i < 7; $i++) { echo $_SESSION["massiv"][$i].","; }?>'.split(',', 7),
                         lesson_view = '<?php for ($i = 0; $i < 4; $i++) { echo $_SESSION["lesson_massiv"][$i].","; }?>'.split(',', 4),
                         contents_view = '',
-                        maps_view = '<?php for ($i = 0; $i < 6; $i++) { echo $_SESSION["massiv-map"][$i].","; }?>'.split(',', 6);
+                        practic_view = '<?php for ($i = 0; $i < 6; $i++) { echo $_SESSION["massiv-prac"][$i].","; }?>'.split(',', 6);
 
                     if (session == 1) { // filling table `lesson`
                         $('.lesson').removeClass('disable');
@@ -209,19 +205,18 @@
                         $("#lessonClassName").val(lesson_view[1]);
                         $("#lessonClassDescription").val(lesson_view[2]);
                         $("#select-user-lesson :selected").val(lesson_view[3]);
-                    } else if (session == 2) { // FIXME:filling table `contents`
+                    } else if (session == 2) { // filling table `practic`
+                        $(".practic").removeClass('disable');
+                        $(".practic").addClass('active');
+
+                        $('#prac-id').val(practic_view[0]);
+                        $('#name_prac').val(practic_view[1]);
+                        $('#desc-prac').val(practic_view[2]);
+                        $('#us_prac [value="<?php echo $_SESSION['massiv-prac'][4]?>"]').attr("selected", "selected");
+                        $('#lat [value="<?php echo $_SESSION['massiv-prac'][3]?>"]').attr("selected", "selected");
+                    } else if (session == 3) { // FIXME:filling table `contents`
                         $(".gallery").removeClass('disable');
                         $(".gallery").addClass('active');
-                    } else if (session == 3) { // filling table `maps`
-                        $(".maps").removeClass('disable');
-                        $(".maps").addClass('active');
-
-                        $('#map-id').val(maps_view[0]);
-                        $('#name_map').val(maps_view[1]);
-                        $('#desc-map').val(maps_view[2]);
-                        $('#us_map [value="<?php echo $_SESSION['massiv-map'][3]?>"]').attr("selected", "selected");
-                        $('#lat').val(maps_view[4]);
-                        $('#lan').val(maps_view[5]);
                     } else if (session == 4) { // filling table `user`
                         $('.user').removeClass('disable');
                         $('.user').addClass('active');
@@ -234,17 +229,17 @@
                     }
                 } else { // Start edit
                     if (session == 1) {
-                        document.title = 'Изменить статью';
+                        document.title = 'Изменить лекцию';
                         $(".edit-lesson").removeClass('disable');
                         $(".edit-lesson").addClass('active');
-                    } else if (session === 2) {
+                    } else if (session == 2) {
+                        document.title = "Изменить метку на карте";
+                        $(".edit-practic").removeClass('disable');
+                        $(".edit-practic").addClass('active');
+                    } else if (session === 3) {
                         document.title = 'Изменить файл из галерея';
                         $(".edit-gallery").removeClass('disable');
                         $(".edit-gallery").addClass('active');
-                    } else if (session == 3) {
-                        document.title = "Изменить метку на карте";
-                        $(".edit-maps").removeClass('disable');
-                        $(".edit-maps").addClass('active');
                     } else if (session == 4) {
                         document.title = "Изменить пользователя";
                         $(".edit-user").removeClass('disable');
@@ -352,54 +347,49 @@
         }
 
     /**
-     * Insert table `maps`
+     * Insert table `practic`
      */
-        if (isset($_REQUEST['add_maps_click'])) {
-            $add_name_map = filter_input(INPUT_POST, "add_name_map");
-            if (!$add_name_map) {
-                throw new Exception("Не корректно введено название метки!");
+        if (isset($_REQUEST['add_practic_click'])) {
+            $add_name_prac = filter_input(INPUT_POST, "add_name_prac");
+            if (!$add_name_prac) {
+                throw new Exception("Не корректно введено название задания!");
             }
 
-            $add_description_map = filter_input(INPUT_POST, "add_description_map");
-            if (!$add_description_map) {
-                throw new Exception("Не корректно введено описание метки!");
+            $add_description_prac = filter_input(INPUT_POST, "add_description_prac");
+            if (!$add_description_prac) {
+                throw new Exception("Не корректно введено описание задания!");
             }
 
-            $add_map_user_id = filter_input(INPUT_POST, "add_map_user_id", FILTER_VALIDATE_INT);
-            if (!$add_map_user_id) {
+            $add_prac_user_id = filter_input(INPUT_POST, "add_prac_user_id", FILTER_VALIDATE_INT);
+            if (!$add_prac_user_id) {
                 throw new Exception("Не выбран пользователь!");
             }
 
-            $add_latitude = filter_input(INPUT_POST, "add_latitude", FILTER_VALIDATE_FLOAT);
-            if (!$add_latitude) {
-                throw new Exception("Не корректно введена широта!");
+            $add_lesson_id = filter_input(INPUT_POST, "add_less_id", FILTER_VALIDATE_INT);
+            if (!$add_lesson_id) {
+                throw new Exception("Не выбрана лекция!");
             }
-
-            $add_langitude = filter_input(INPUT_POST, "add_langitude", FILTER_VALIDATE_FLOAT);
-            if (!$add_langitude) {
-                throw new Exception("Не корректно введена долгота!");
-            }
-            
+            var_dump([$add_name_prac, $add_description_prac, $add_lesson_id, $add_prac_user_id]);
             if ($_SESSION[method] == 'add') {
-                $sql = "INSERT INTO maps (name_map, description, id_user, latitude, langitude) VALUES (?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO practic (name_task, description, id_lesson, id_user) VALUES (?, ?, ?, ?)";
                 $query = $pdo->prepare($sql);
-                $query->execute([$add_name_map, $add_description_map, $add_map_user_id, $add_latitude, $add_langitude]);
-                echo "<script>alert('Метка на карту добавлена'); location.replace('my_data.php');</script>";
+                $query->execute([$add_name_prac, $add_description_prac, $add_lesson_id, $add_prac_user_id]);
+                echo "<script>alert('Задание добавлено'); location.replace('my_data.php');</script>";
             } else if ($_SESSION['method'] == 'edit') {
-                $id_maps = filter_input(INPUT_POST, 'map_id');
-                if (!$id_maps) {
+                $id_practic = filter_input(INPUT_POST, 'prac_id');
+                if (!$id_practic) {
                     throw new Exception("Error Processing Request");
                 }
 
-                $sql = "UPDATE maps SET name_map = ?, description = ?, id_user = ?, latitude = ?, langitude = ? WHERE id_maps = ?";
+                $sql = "UPDATE practic SET name_task = ?, description = ?, id_lesson = ?, id_user = ? WHERE id_practic = ?";
                 $query = $pdo->prepare($sql);
-                $query->execute([$add_name_map, $add_description_map, $add_map_user_id, $add_latitude, $add_langitude, $id_maps]);
+                $query->execute([$add_name_prac, $add_description_prac, $add_lesson_id, $add_prac_user_id, $id_practic]);
                 echo "<script>alert('Метка изменена'); location.replace('my_data.php');</script>";
             }
             
-            unset($_SESSION['id_map']);
+            unset($_SESSION['id_prac']);
             unset($_SESSION['edit']);
-            unset($_SESSION['massiv-map']);
+            unset($_SESSION['massiv-prac']);
         }
 
     /**
@@ -441,7 +431,7 @@
             unset($_SESSION['edit']);
 
             unset($_SESSION['id_user']);
-            unset($_SESSION['id_map']);
+            unset($_SESSION['id_prac']);
             unset($_SESSION['id_content']);
             unset($_SESSION['id_lesson']);
         }
@@ -462,19 +452,19 @@
             }
             $_SESSION['id_user'] = array($login_edit, $user_id_edit);
         }
-        // if (empty($_SESSION['id_map'])) {
-        //     $query_maps = "SELECT id_maps, name_map FROM maps";
-        //     $view_maps = $pdo->query($query_maps);
-        //     $counts = 0;
-        //     $name_maps = array();
-        //     $id_map = array();
-        //     while ($row = $view_maps->fetch(PDO::FETCH_LAZY)) {
-        //         $name_maps[$counts] = $row->name_map;
-        //         $id_map[$counts] = $row->id_maps;
-        //         $counts++;
-        //     }
-        //     $_SESSION['id_map'] = array($name_maps, $id_map);
-        // }
+        if (empty($_SESSION['id_prac'])) {
+            $query_practic = "SELECT id_practic, name_task FROM practic";
+            $view_practic = $pdo->query($query_practic);
+            $counts = 0;
+            $name_practic = array();
+            $id_prac = array();
+            while ($row = $view_practic->fetch(PDO::FETCH_LAZY)) {
+                $name_practic[$counts] = $row->name_task;
+                $id_prac[$counts] = $row->id_practic;
+                $counts++;
+            }
+            $_SESSION['id_prac'] = array($name_practic, $id_prac);
+        }
         // if (empty($_SESSION['id_content'])) {
         //     $query = "SELECT id_link, name_link FROM contents";
         //     $view_edit = $pdo->query($query);
@@ -512,56 +502,71 @@
     let select_user_edit = document.getElementById('select-user'),
         select_user_id = document.getElementById('select-user-lesson'),
         select_lesson = document.getElementById('select-lesson'),
-        user_map_select = document.getElementById('us_map'),
-        user_map_sel_maps = document.getElementById('select-maps'),
+        user_prac_select = document.getElementById('us_prac'),
+        less_id_practic = document.getElementById('lat'),
+        user_prac_sel_practic = document.getElementById('select-practic'),
         count = "<?php echo count($_SESSION['id_user'][0]);?>",
         count_lesson = "<?php echo count($_SESSION['id_lesson'][0]);?>",
         parametr_text = '<?php for ($i = count($_SESSION["id_user"][0])-1; $i >= 0; $i--) { echo $_SESSION["id_user"][0][$i].","; }?>'.split(',', count),
         parametr_id = '<?php for ($i = count($_SESSION["id_user"][0])-1; $i >= 0; $i--) { echo $_SESSION["id_user"][1][$i].","; }?>'.split(',', count),
         parametr_text_lesson = '<?php for ($i = count($_SESSION["id_lesson"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_lesson'][0][$i].","; }?>'.split(',', count_lesson),
         parametr_id_lesson = '<?php for ($i = count($_SESSION["id_lesson"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_lesson'][1][$i].","; }?>'.split(',', count_lesson),
-        count_map = "<?php echo count($_SESSION['id_map'][0]);?>",
-        map_view = '<?php for ($i = count($_SESSION["id_map"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_map'][0][$i].","; }?>'.split(',', count_map),
-        map_view_id = '<?php for ($i = count($_SESSION["id_map"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_map'][1][$i].","; }?>'.split(',', count_map)
+        count_prac = "<?php echo count($_SESSION['id_prac'][0]);?>",
+        prac_view = '<?php for ($i = count($_SESSION["id_prac"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_prac'][0][$i].","; }?>'.split(',', count_prac),
+        prac_view_id = '<?php for ($i = count($_SESSION["id_prac"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_prac'][1][$i].","; }?>'.split(',', count_prac)
+    /**
+    * table user
+    */
+        for (let i = 0; i < count; i++) { // Add `option` in `select` table user->`user_id`
+            let option = document.createElement('option');
 
-    for (let i = 0; i < count; i++) { // Add `option` in `select` table user->`user_id`
-        let option = document.createElement('option');
+            option.innerHTML = parametr_text[i];
+            option.value = parametr_id[i];
+            select_user_edit.appendChild(option);
+        }
+    /**
+    * table lesson
+    */
+        for (let i = 0; i < count; i++) { // Add `option` in `select` table lesson->`lesson_user_id`
+            let option_art_id = document.createElement('option');
 
-        option.innerHTML = parametr_text[i];
-        option.value = parametr_id[i];
-        select_user_edit.appendChild(option);
-    }
+            option_art_id.innerHTML = parametr_text[i];
+            option_art_id.value = parametr_id[i];
+            select_user_id.appendChild(option_art_id);
+        }
+        for (let i = 0; i < count_lesson; i++) { //Add 'option' in `select` table lesson->`lesson_id`
+            let option_lesson = document.createElement('option');
 
-    for (let i = 0; i < count; i++) { // Add `option` in `select` table lesson->`lesson_user_id`
-        let option_art_id = document.createElement('option');
+            option_lesson.innerHTML = parametr_text_lesson[i];
+            option_lesson.value = parametr_id_lesson[i];
+            select_lesson.appendChild(option_lesson);
+        }
+    /**
+    * table practic
+    */
+        for (let i = 0; i < count; i++) { // Add `option` in `select` table practic->practic_user_id`
+            let option_prac_id = document.createElement('option');
 
-        option_art_id.innerHTML = parametr_text[i];
-        option_art_id.value = parametr_id[i];
-        select_user_id.appendChild(option_art_id);
-    }
-    for (let i = 0; i < count; i++) { // Add `option` in `select` table maps->maps_user_id`
-        let option_map_id = document.createElement('option');
+            option_prac_id.innerHTML = parametr_text[i];
+            option_prac_id.value = parametr_id[i];
+            user_prac_select.appendChild(option_prac_id);
+        }
+        for (let i = 0; i < count_prac; i++) { //Add 'option' in `select` table practic->`practic_id`
+            let option_prac = document.createElement('option');
 
-        option_map_id.innerHTML = parametr_text[i];
-        option_map_id.value = parametr_id[i];
-        user_map_select.appendChild(option_map_id);
-    }
+            option_prac.innerHTML = prac_view[i];
+            option_prac.value = prac_view_id[i];
+            user_prac_sel_practic.appendChild(option_prac);
+        }
+        for (let i = 0; i < count_lesson; i++) { //Add 'option' in `select` table practic->`practic_lesson_id`
+            let option_pract = document.createElement('option');
 
-    for (let i = 0; i < count_lesson; i++) { //Add 'option' in `select` table lesson->`lesson_id`
-        let option_lesson = document.createElement('option');
+            option_pract.innerHTML = parametr_text_lesson[i];
+            option_pract.value = parametr_id_lesson[i];
+            less_id_practic.appendChild(option_pract);
+        }
 
-        option_lesson.innerHTML = parametr_text_lesson[i];
-        option_lesson.value = parametr_id_lesson[i];
-        select_lesson.appendChild(option_lesson);
-    }
 
-    for (let i = 0; i < count_map; i++) { //Add 'option' in `select` table maps->`maps_id`
-        let option_map = document.createElement('option');
-
-        option_map.innerHTML = map_view[i];
-        option_map.value = map_view_id[i];
-        user_map_sel_maps.appendChild(option_map);
-    }
 </script>
 <?php
 /**
@@ -586,7 +591,7 @@
         echo "<script>location.replace('edit.php');</script>";
     }
 /**
- * Click Select `user` Delete FIXME:
+ * Click Select `user` Delete
  */
     $select_user_edit_view = filter_input(INPUT_POST, "select-user");
 
@@ -631,7 +636,7 @@
     }
 
 /**
-  * Click Select `lesson` Edit FIXME:
+  * Click Select `lesson` Edit
  */
     if (isset($_REQUEST['click-edit-lesson'])) {
         $_SESSION['edit'] = 'edit';
@@ -653,7 +658,7 @@
         echo "<script>location.replace('edit.php');</script>";
     }
 /**
- * Click Select `lesson` Delete FIXME:
+ * Click Select `lesson` Delete
  */
     if (isset($_REQUEST['click-delete-lesson'])) {
         $select_lesson_edit_view = filter_input(INPUT_POST, "select-lesson");
@@ -665,7 +670,7 @@
         $select_lesson_edit_view_value = $_SESSION['id_lesson'][0][$value_edit_select];
         
         echo "<script>
-            let answer = confirm('Вы действительно хотите удалить статью - " .$select_lesson_edit_view_value. " !');
+            let answer = confirm('Вы действительно хотите удалить лекцию - " .$select_lesson_edit_view_value. " !');
             if (answer == true) {
                 location.replace('edit.php?id=ok&del=" .$select_lesson_edit_view. "');
             } else { 
@@ -675,62 +680,61 @@
             </script>";
     }
 
-//     if ($_GET['id'] == 'ok') {
-//         $query = 'DELETE FROM lesson WHERE id_lesson = ?';
-//         $query_one = 'DELETE FROM contents WHERE id_lesson = ?';
-//         try {
-//             $view_dell = $pdo->prepare($query_one);
-//             $view_del = $pdo->prepare($query);
-//             $view_dell->execute([$_GET['del']]);
-//             $view_del->execute([$_GET['del']]);
+    if ($_GET['id'] == 'ok') {
+        $query = 'DELETE FROM lesson WHERE id_lesson = ?';
+        $query_one = 'DELETE FROM practic WHERE id_lesson = ?';
+        try {
+            $view_dell = $pdo->prepare($query_one);
+            $view_del = $pdo->prepare($query);
+            $view_dell->execute([$_GET['del']]);
+            $view_del->execute([$_GET['del']]);
             
-//             echo "<script>alert('Запись удалена!');location.replace('my_data.php');</script>";
-//             unset($_SESSION['id_lesson']);
-//         } catch (Exception $e) {
-//             echo $e->getMessage();
-//         }
-//     }
+            echo "<script>alert('Запись удалена!');location.replace('my_data.php');</script>";
+            unset($_SESSION['id_lesson']);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
 
-// /**
-//  * Click Select `maps` Edit FIXME:
-//  */
-//     if (isset($_REQUEST['ed-maps'])) {
-//         $select_map_edit_view = filter_input(INPUT_POST, "select-maps");
-//         if (!$select_map_edit_view) {
-//             throw new Exception("Выберите что-нибудь для изменения!");
-//         }
-
-//         $query_edit = "SELECT * FROM maps WHERE id_maps = ?";
-//         $view_edit_map = $pdo->prepare($query_edit);
-//         $view_edit_map->execute([$select_map_edit_view]);
-//         while ($row = $view_edit_map->fetch(PDO::FETCH_LAZY)) {
-//             $_SESSION["massiv-map"][0] = $row->id_maps;
-//             $_SESSION["massiv-map"][1] = $row->name_map;
-//             $_SESSION["massiv-map"][2] = $row->description;
-//             $_SESSION["massiv-map"][3] = $row->id_user;
-//             $_SESSION["massiv-map"][4] = $row->latitude;
-//             $_SESSION["massiv-map"][5] = $row->langitude;
-//         }
-//         $_SESSION['edit'] = 'edit';
-//         echo "<script>location.replace('edit.php');</script>";
-//     }
-
-// /**
-//  * Click Select `maps` Delete FIXME:
-//  */
-    if (isset($_REQUEST['del-maps'])) {
-        $select_maps_edit_view = filter_input(INPUT_POST, "select-maps");
-        if (!$select_maps_edit_view) {
+/**
+ * Click Select `practic` Edit FIXME:
+ */
+    if (isset($_REQUEST['ed-practic'])) {
+        $select_prac_edit_view = filter_input(INPUT_POST, "select-practic");
+        if (!$select_prac_edit_view) {
             throw new Exception("Выберите что-нибудь для изменения!");
         }
 
-        $value_edit_id = array_search( $select_maps_edit_view, $_SESSION['id_map'][1]);
-        $select_maps_edit_view_value = $_SESSION['id_map'][0][$value_edit_id];
+        $query_edit = "SELECT * FROM practic WHERE id_practic = ?";
+        $view_edit_prac = $pdo->prepare($query_edit);
+        $view_edit_prac->execute([$select_prac_edit_view]);
+        while ($row = $view_edit_prac->fetch(PDO::FETCH_LAZY)) {
+            $_SESSION["massiv-prac"][0] = $row->id_practic;
+            $_SESSION["massiv-prac"][1] = $row->name_task;
+            $_SESSION["massiv-prac"][2] = $row->description;
+            $_SESSION["massiv-prac"][3] = $row->id_lesson;
+            $_SESSION["massiv-prac"][4] = $row->id_user;
+        }
+        $_SESSION['edit'] = 'edit';
+        echo "<script>location.replace('edit.php');</script>";
+    }
+
+/**
+ * Click Select `practic` Delete FIXME:
+ */
+    if (isset($_REQUEST['del-practic'])) {
+        $select_practic_edit_view = filter_input(INPUT_POST, "select-practic");
+        if (!$select_practic_edit_view) {
+            throw new Exception("Выберите что-нибудь для изменения!");
+        }
+
+        $value_edit_id = array_search( $select_practic_edit_view, $_SESSION['id_prac'][1]);
+        $select_practic_edit_view_value = $_SESSION['id_prac'][0][$value_edit_id];
         
         echo "<script>
-            let answer = confirm('Вы действительно хотите удалить метку - " .$select_maps_edit_view_value. " !');
+            let answer = confirm('Вы действительно хотите удалить метку - " .$select_practic_edit_view_value. " !');
             if (answer == true) {
-                location.replace('edit.php?id=ok&del=" .$select_maps_edit_view. "');
+                location.replace('edit.php?id=ok&del=" .$select_practic_edit_view. "');
             } else { 
                 alert('Операция отменена пользователем!'); 
                 location.replace('my_data.php');
@@ -739,13 +743,13 @@
     }
 
     if ($_GET['id'] == 'ok') {
-        $query_one = 'DELETE FROM maps WHERE id_maps = ?';
+        $query_one = 'DELETE FROM practic WHERE id_practic = ?';
         try {
             $view_dell = $pdo->prepare($query_one);
             $view_dell->execute([$_GET['del']]);
             
             echo "<script>alert('Запись удалена!');location.replace('my_data.php');</script>";
-            unset($_SESSION['id_map']);
+            unset($_SESSION['id_prac']);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
