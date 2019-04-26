@@ -10,7 +10,7 @@ a {
     text-decoration: none;
 }
 
-form.user, .article, .maps, .gallery {
+form.user, .lesson, .practic, .gallery {
     padding-top: 2%;
     text-align: center;
 }
