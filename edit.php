@@ -47,59 +47,42 @@
         </p>
     </form>
 
-<!-- form table 'article' -->
-    <form method="post" class="disable edit-article">
+<!-- form table 'lesson' -->
+    <form method="post" class="disable edit-lesson">
         <p>
-            <select id="select-article" name="select-article"></select>
+            <select id="select-lesson" name="select-lesson"></select>
         </p>
-        <button id="edit-article" name="click-edit-article">Изменить</button>
-        <button name="click-delete-article" class="click-delete">Удалить</button>
+        <button id="edit-lesson" name="click-edit-lesson">Изменить</button>
+        <button name="click-delete-lesson" class="click-delete">Удалить</button>
         <p>
             <button name="back-click">Back</button>
         </p>
     </form>
-    <form method="post" class="disable article">
+    <form method="post" class="disable lesson">
         <div class="disable hide-add">
-            <label>№ статьи</label>
+            <label>№ Лекции</label>
             <p>
-                <input type="text" id="articleClassId" readonly name="article_id">
+                <input type="text" id="lessonClassId" readonly name="lesson_id">
             </p>
         </div>
-        <label>Название статьи</label>
+        <label>Название Лекции</label>
         <p>
-            <input type="text" id="articleClassName"  name="add_name_article">
+            <input type="text" id="lessonClassName"  name="add_name_lesson">
         </p>
-        <label>Описание статьи</label>
+        <label>Описание лекции</label>
         <p>
-            <textarea name="add_description_article" id="articleClassDescription" maxlength="10000"></textarea>
+            <textarea name="add_description_lesson" id="lessonClassDescription" maxlength="10000"></textarea>
         </p>
         <label>Пользователь</label>
         <p>
-            <select name="select-user-article" id="select-user-article"></select>
+            <select name="select-user-lesson" id="select-user-lesson"></select>
         </p>
-        <button name="add_article_click">Выполнить</button>
+        <button name="add_lesson_click">Выполнить</button>
         <p>
             <button name="back-click">Back</button>
         </p>
     </form>
 
-<!-- TODO: form table `temp article` -->
-    <form method="post" class="disable article_temp_add">
-        <label>Название статьи</label>
-        <p>
-            <input type="text" name="add_name_article_temp">
-        </p>
-        <label>Описание статьи</label>
-        <p>
-            <textarea name="add_description_article_temp" maxlength="10000"></textarea>
-        </p>
-        <label>Пользователь</label>
-        <p>
-            <input type="text" name="add_user_id_temp" value="1">
-        </p>
-        <button name="add_article_temp_click">Выполнить</button>
-    </form>
-    
 <!-- form table `maps` -->
     <form method="post" class="disable edit-maps">
          <p>
@@ -168,11 +151,11 @@
         </p>
         <label>Опубликованная статья</label>
         <p>
-            <input type="text" name="add_link_article">
+            <input type="text" name="add_link_lesson">
         </p>
         <label>Не опубликованная статья</label>
         <p>
-            <input type="text" name="add_linc_article_temp">
+            <input type="text" name="add_linc_lesson_temp">
         </p>
         <button name="add_gallery_click">Выполнить</button>
         <p>
@@ -190,8 +173,8 @@
             if (method == 'add') {
                 if (session == 1) {
                     document.title = 'Добавить статью';
-                    $(".article").removeClass('disable');
-                    $(".article").addClass('active');
+                    $(".lesson").removeClass('disable');
+                    $(".lesson").addClass('active');
                 } else if (session === 2) { //FIXME: show form
                     document.title = 'Добавить в галерею';
                     $(".gallery").removeClass('disable');
@@ -214,18 +197,18 @@
                     $('.hide-add').addClass('active');
 
                     let user_view = '<?php for ($i = 0; $i < 7; $i++) { echo $_SESSION["massiv"][$i].","; }?>'.split(',', 7),
-                        article_view = '<?php for ($i = 0; $i < 4; $i++) { echo $_SESSION["article_massiv"][$i].","; }?>'.split(',', 4),
+                        lesson_view = '<?php for ($i = 0; $i < 4; $i++) { echo $_SESSION["lesson_massiv"][$i].","; }?>'.split(',', 4),
                         contents_view = '',
                         maps_view = '<?php for ($i = 0; $i < 6; $i++) { echo $_SESSION["massiv-map"][$i].","; }?>'.split(',', 6);
 
-                    if (session == 1) { // filling table `article`
-                        $('.article').removeClass('disable');
-                        $('.article').addClass('active');
+                    if (session == 1) { // filling table `lesson`
+                        $('.lesson').removeClass('disable');
+                        $('.lesson').addClass('active');
 
-                        $("#articleClassId").val(article_view[0]);
-                        $("#articleClassName").val(article_view[1]);
-                        $("#articleClassDescription").val(article_view[2]);
-                        $("#select-user-article :selected").val(article_view[3]);
+                        $("#lessonClassId").val(lesson_view[0]);
+                        $("#lessonClassName").val(lesson_view[1]);
+                        $("#lessonClassDescription").val(lesson_view[2]);
+                        $("#select-user-lesson :selected").val(lesson_view[3]);
                     } else if (session == 2) { // FIXME:filling table `contents`
                         $(".gallery").removeClass('disable');
                         $(".gallery").addClass('active');
@@ -252,8 +235,8 @@
                 } else { // Start edit
                     if (session == 1) {
                         document.title = 'Изменить статью';
-                        $(".edit-article").removeClass('disable');
-                        $(".edit-article").addClass('active');
+                        $(".edit-lesson").removeClass('disable');
+                        $(".edit-lesson").addClass('active');
                     } else if (session === 2) {
                         document.title = 'Изменить файл из галерея';
                         $(".edit-gallery").removeClass('disable');
@@ -328,63 +311,44 @@
         }
 
     /**
-     * INsert && Update table `article`
+     * INsert && Update table `lesson`
      */
-        if (isset($_REQUEST['add_article_click'])) {
-            $add_name_article = filter_input(INPUT_POST, "add_name_article");
-            if (!$add_name_article) {
+        if (isset($_REQUEST['add_lesson_click'])) {
+            $add_name_lesson = filter_input(INPUT_POST, "add_name_lesson");
+            if (!$add_name_lesson) {
                 throw new Exception("Не корректно введено название статьи!");
             }
 
-            $add_description_article = filter_input(INPUT_POST, "add_description_article");
-            if (!$add_description_article) {
+            $add_description_lesson = filter_input(INPUT_POST, "add_description_lesson");
+            if (!$add_description_lesson) {
                 throw new Exception("Не корректно введены данные!");
             }
 
-            $add_user_id = filter_input(INPUT_POST, "select-user-article", FILTER_VALIDATE_INT);
+            $add_user_id = filter_input(INPUT_POST, "select-user-lesson", FILTER_VALIDATE_INT);
             if (!$add_user_id) {
                 throw new Exception("Не выбран автор статьи!");
             }
-            $id_article = filter_input(INPUT_POST, 'article_id');
-            if (!$id_article) {
-                throw new Exception("Error Processing Request");
-                
-            }
-
+            
             if ($_SESSION['method'] == 'add') {
-                $sql = "INSERT INTO article (name_article, description, id_user) VALUES (?, ?, ?)";
+                $sql = "INSERT INTO lesson (name_lesson, description, id_user) VALUES (?, ?, ?)";
                 $query = $pdo->prepare($sql);
-                $query->execute([$add_name_article, $add_description_article, $add_user_id]);
+                $query->execute([$add_name_lesson, $add_description_lesson, $add_user_id]);
                 echo "<script>alert('Статья добавлена'); location.replace('my_data.php');</script>";
             } else if ($_SESSION['method'] == 'edit') {
-                $sql = "UPDATE article SET name_article = ?, description = ?, id_user = ? WHERE id_article = ?";
+                $id_lesson = filter_input(INPUT_POST, 'lesson_id');
+                if (!$id_lesson) {
+                    throw new Exception("Error Processing Request");
+                    
+                }
+
+                $sql = "UPDATE lesson SET name_lesson = ?, description = ?, id_user = ? WHERE id_lesson = ?";
                 $query = $pdo->prepare($sql);
-                $query->execute([$add_name_article, $add_description_article, $add_user_id, $id_article]);
+                $query->execute([$add_name_lesson, $add_description_lesson, $add_user_id, $id_lesson]);
                 echo "<script>alert('Статья изменена'); location.replace('my_data.php');</script>";
             }
-            unset($_SESSION['id_article']);
+            unset($_SESSION['id_lesson']);
             unset($_SESSION['edit']);
-            unset($_SESSION['article-massiv']);
-        }
-
-    /**
-     * Insert table `article_temp` TODO:
-     */
-        if (isset($_REQUEST['add_article_temp_click'])) {
-            $add_name_article_temp = filter_input(INPUT_POST, "add_name_article_temp");
-            if (!$add_name_article_temp) {
-                throw new Exception("Не корректно введено название статьи!");
-            }
-
-            $add_description_article_temp = filter_input(INPUT_POST, "add_description_article_temp");
-            if (!$add_description_article_temp) {
-                throw new Exception("Не корректно введены данные!");
-            }
-
-            $sql = "INSERT INTO article (name_article, description) VALUES (?, ?)";
-            $query = $pdo->prepare($sql);
-            $query->execute([$add_name_article_temp, $add_description_article_temp]);
-            echo "<script>alert('Статья добавлена'); location.replace('my_data.php');</script>";
+            unset($_SESSION['lesson-massiv']);
         }
 
     /**
@@ -455,14 +419,14 @@
                 throw new Exception("Error Processing Request", 1);
             }
 
-            $add_link_article = filter_input(INPUT_POST, "add_link_article", FILTER_VALIDATE_INT);
+            $add_link_lesson = filter_input(INPUT_POST, "add_link_lesson", FILTER_VALIDATE_INT);
 
-            $add_link_article_temp = filter_input(INPUT_POST, "add_link_article_temp", FILTER_VALIDATE_INT);
+            $add_link_lesson_temp = filter_input(INPUT_POST, "add_link_lesson_temp", FILTER_VALIDATE_INT);
 
-            // if ($add_link_article == '' && $add_link_article_temp != "" || $add_link_article != "" && $add_link_article_temp == '') {
-            //     $sql = "INSERT INTO contents (link, name_link, id_article, id_article_temp) VALUES (?, ?)";
+            // if ($add_link_lesson == '' && $add_link_lesson_temp != "" || $add_link_lesson != "" && $add_link_lesson_temp == '') {
+            //     $sql = "INSERT INTO contents (link, name_link, id_lesson, id_lesson_temp) VALUES (?, ?)";
             //     $query = $pdo->prepare($sql);
-            //     $query->execute([$add_link, $add_name_link, $add_link_article, $add_link_article_temp]);
+            //     $query->execute([$add_link, $add_name_link, $add_link_lesson, $add_link_lesson_temp]);
             //     echo "<script>alert('Статья добавлена'); location.replace('my_data.php');</script>";
             // } else {
             //     throw new Exception("Ошибка заполнения формы!");
@@ -479,7 +443,7 @@
             unset($_SESSION['id_user']);
             unset($_SESSION['id_map']);
             unset($_SESSION['id_content']);
-            unset($_SESSION['id_article']);
+            unset($_SESSION['id_lesson']);
         }
 
     /**
@@ -524,19 +488,19 @@
         //     }
         //     $_SESSION['id_content'] = array($name_link, $id_link);
         // }
-        // if (empty($_SESSION['id_article'])) {
-        //     $query_article = "SELECT id_article, name_article FROM article";
-        //     $view_article = $pdo->query($query_article);
-        //     $name_article = array();
-        //     $count_article = 0;
-        //     $id_article_edit = array();
-        //     while ($row = $view_article->fetch(PDO::FETCH_LAZY)) {
-        //         $name_article[$count_article] = $row->name_article;
-        //         $id_article_edit[$count_article] = $row->id_article;
-        //         $count_article++;
-        //     }
-        //     $_SESSION['id_article'] = array($name_article, $id_article_edit);
-        // }
+        if (empty($_SESSION['id_lesson'])) {
+            $query_lesson = "SELECT id_lesson, name_lesson FROM lesson";
+            $view_lesson = $pdo->query($query_lesson);
+            $name_lesson = array();
+            $count_lesson = 0;
+            $id_lesson_edit = array();
+            while ($row = $view_lesson->fetch(PDO::FETCH_LAZY)) {
+                $name_lesson[$count_lesson] = $row->name_lesson;
+                $id_lesson_edit[$count_lesson] = $row->id_lesson;
+                $count_lesson++;
+            }
+            $_SESSION['id_lesson'] = array($name_lesson, $id_lesson_edit);
+        }
     } catch (Exception $e) {
         echo $e->getMessage();
     }
@@ -546,16 +510,16 @@
  * Add select element
  */
     let select_user_edit = document.getElementById('select-user'),
-        select_user_id = document.getElementById('select-user-article'),
-        select_article = document.getElementById('select-article'),
+        select_user_id = document.getElementById('select-user-lesson'),
+        select_lesson = document.getElementById('select-lesson'),
         user_map_select = document.getElementById('us_map'),
         user_map_sel_maps = document.getElementById('select-maps'),
         count = "<?php echo count($_SESSION['id_user'][0]);?>",
-        count_article = "<?php echo count($_SESSION['id_article'][0]);?>",
+        count_lesson = "<?php echo count($_SESSION['id_lesson'][0]);?>",
         parametr_text = '<?php for ($i = count($_SESSION["id_user"][0])-1; $i >= 0; $i--) { echo $_SESSION["id_user"][0][$i].","; }?>'.split(',', count),
         parametr_id = '<?php for ($i = count($_SESSION["id_user"][0])-1; $i >= 0; $i--) { echo $_SESSION["id_user"][1][$i].","; }?>'.split(',', count),
-        parametr_text_article = '<?php for ($i = count($_SESSION["id_article"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_article'][0][$i].","; }?>'.split(',', count_article),
-        parametr_id_article = '<?php for ($i = count($_SESSION["id_article"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_article'][1][$i].","; }?>'.split(',', count_article),
+        parametr_text_lesson = '<?php for ($i = count($_SESSION["id_lesson"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_lesson'][0][$i].","; }?>'.split(',', count_lesson),
+        parametr_id_lesson = '<?php for ($i = count($_SESSION["id_lesson"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_lesson'][1][$i].","; }?>'.split(',', count_lesson),
         count_map = "<?php echo count($_SESSION['id_map'][0]);?>",
         map_view = '<?php for ($i = count($_SESSION["id_map"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_map'][0][$i].","; }?>'.split(',', count_map),
         map_view_id = '<?php for ($i = count($_SESSION["id_map"][0])-1; $i >= 0; $i--) { echo $_SESSION['id_map'][1][$i].","; }?>'.split(',', count_map)
@@ -568,7 +532,7 @@
         select_user_edit.appendChild(option);
     }
 
-    for (let i = 0; i < count; i++) { // Add `option` in `select` table article->`article_user_id`
+    for (let i = 0; i < count; i++) { // Add `option` in `select` table lesson->`lesson_user_id`
         let option_art_id = document.createElement('option');
 
         option_art_id.innerHTML = parametr_text[i];
@@ -583,12 +547,12 @@
         user_map_select.appendChild(option_map_id);
     }
 
-    for (let i = 0; i < count_article; i++) { //Add 'option' in `select` table article->`article_id`
-        let option_article = document.createElement('option');
+    for (let i = 0; i < count_lesson; i++) { //Add 'option' in `select` table lesson->`lesson_id`
+        let option_lesson = document.createElement('option');
 
-        option_article.innerHTML = parametr_text_article[i];
-        option_article.value = parametr_id_article[i];
-        select_article.appendChild(option_article);
+        option_lesson.innerHTML = parametr_text_lesson[i];
+        option_lesson.value = parametr_id_lesson[i];
+        select_lesson.appendChild(option_lesson);
     }
 
     for (let i = 0; i < count_map; i++) { //Add 'option' in `select` table maps->`maps_id`
@@ -667,53 +631,53 @@
     }
 
 /**
-//  * Click Select `article` Edit FIXME:
-//  */
-//     if (isset($_REQUEST['click-edit-article'])) {
-//         $_SESSION['edit'] = 'edit';
+  * Click Select `lesson` Edit FIXME:
+ */
+    if (isset($_REQUEST['click-edit-lesson'])) {
+        $_SESSION['edit'] = 'edit';
 
-//         $select_article_edit_view = filter_input(INPUT_POST, "select-article");
-//         if (!$select_article_edit_view) {
-//             throw new Exception("Выберите что-нибудь для изменения!");
-//         }
+        $select_lesson_edit_view = filter_input(INPUT_POST, "select-lesson");
+        if (!$select_lesson_edit_view) {
+            throw new Exception("Выберите что-нибудь для изменения!");
+        }
 
-//         $query_edit_article = "SELECT * FROM article WHERE id_article = ?";
-//         $view_edit_article = $pdo->prepare($query_edit_article);
-//         $view_edit_article->execute([$select_article_edit_view]);
-//         while ($row = $view_edit_article->fetch(PDO::FETCH_LAZY)) {
-//             $_SESSION["article_massiv"][0] = $row->id_article;
-//             $_SESSION["article_massiv"][1] = $row->name_article;
-//             $_SESSION["article_massiv"][2] = $row->description;
-//             $_SESSION["article_massiv"][3] = $row->id_user;
-//         }
-//         echo "<script>location.replace('edit.php');</script>";
-//     }
-// /**
-//  * Click Select `article` Delete FIXME:
-//  */
-//     if (isset($_REQUEST['click-delete-article'])) {
-//         $select_article_edit_view = filter_input(INPUT_POST, "select-article");
-//         if (!$select_article_edit_view) {
-//             throw new Exception("Выберите что-нибудь для изменения!");
-//         }
+        $query_edit_lesson = "SELECT * FROM lesson WHERE id_lesson = ?";
+        $view_edit_lesson = $pdo->prepare($query_edit_lesson);
+        $view_edit_lesson->execute([$select_lesson_edit_view]);
+        while ($row = $view_edit_lesson->fetch(PDO::FETCH_LAZY)) {
+            $_SESSION["lesson_massiv"][0] = $row->id_lesson;
+            $_SESSION["lesson_massiv"][1] = $row->name_lesson;
+            $_SESSION["lesson_massiv"][2] = $row->description;
+            $_SESSION["lesson_massiv"][3] = $row->id_user;
+        }
+        echo "<script>location.replace('edit.php');</script>";
+    }
+/**
+ * Click Select `lesson` Delete FIXME:
+ */
+    if (isset($_REQUEST['click-delete-lesson'])) {
+        $select_lesson_edit_view = filter_input(INPUT_POST, "select-lesson");
+        if (!$select_lesson_edit_view) {
+            throw new Exception("Выберите что-нибудь для изменения!");
+        }
 
-//         $value_edit_select = array_search( $select_article_edit_view, $_SESSION['id_article'][1]);
-//         $select_article_edit_view_value = $_SESSION['id_article'][0][$value_edit_select];
+        $value_edit_select = array_search( $select_lesson_edit_view, $_SESSION['id_lesson'][1]);
+        $select_lesson_edit_view_value = $_SESSION['id_lesson'][0][$value_edit_select];
         
-//         echo "<script>
-//             let answer = confirm('Вы действительно хотите удалить статью - " .$select_article_edit_view_value. " !');
-//             if (answer == true) {
-//                 location.replace('edit.php?id=ok&del=" .$select_article_edit_view. "');
-//             } else { 
-//                 alert('Операция отменена пользователем!'); 
-//                 location.replace('my_data.php');
-//             }
-//             </script>";
-//     }
+        echo "<script>
+            let answer = confirm('Вы действительно хотите удалить статью - " .$select_lesson_edit_view_value. " !');
+            if (answer == true) {
+                location.replace('edit.php?id=ok&del=" .$select_lesson_edit_view. "');
+            } else { 
+                alert('Операция отменена пользователем!'); 
+                location.replace('my_data.php');
+            }
+            </script>";
+    }
 
 //     if ($_GET['id'] == 'ok') {
-//         $query = 'DELETE FROM article WHERE id_article = ?';
-//         $query_one = 'DELETE FROM contents WHERE id_article = ?';
+//         $query = 'DELETE FROM lesson WHERE id_lesson = ?';
+//         $query_one = 'DELETE FROM contents WHERE id_lesson = ?';
 //         try {
 //             $view_dell = $pdo->prepare($query_one);
 //             $view_del = $pdo->prepare($query);
@@ -721,7 +685,7 @@
 //             $view_del->execute([$_GET['del']]);
             
 //             echo "<script>alert('Запись удалена!');location.replace('my_data.php');</script>";
-//             unset($_SESSION['id_article']);
+//             unset($_SESSION['id_lesson']);
 //         } catch (Exception $e) {
 //             echo $e->getMessage();
 //         }
