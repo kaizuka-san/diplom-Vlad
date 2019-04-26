@@ -20,9 +20,9 @@
             <p>
                 <select name="select_admin" id="select_admin">
                     <option value="0"></option>
-                    <option value="1">Статьи</option>
-                    <option value="2">Галерея</option>
-                    <option value="3">Карта</option>
+                    <option value="1">Лекции</option>
+                    <option value="2">Практика</option>
+                    <option value="3">Тесты</option>
                     <option value="4">Пользователи</option>
                 </select>
                 <button name="add_admin">Добавить</button>
@@ -35,10 +35,9 @@
             <p>
                 <select name="select_user" id="select_user">
                     <option value="0"></option>
-                    <option value="1">Статьи</option>
-                    <option value="2">Галерея</option>
-                    <option value="3">Карта</option>
-                    <option value="4">Данные</option>
+                    <option value="1">Практика</option>
+                    <option value="2">Тесты</option>
+                    <option value="3">Данные</option>
                 </select>
                 <button name="add_user">Добавить</button>
                 <button name="edit_user">Изменить</button>
@@ -51,7 +50,7 @@
         document.title = "Привет <?php echo $_SESSION['user'];?>";
 
         let access = "<?php echo $_SESSION['access'];?>";
-        if (access === 'admin') {
+        if (access === 'Администратор') {
             $(".admin").removeClass('disable');
             $(".admin").addClass('active');
         }
@@ -76,7 +75,7 @@
     }
 
 /**
- * PHP-script work admin panel
+ * PHP-script admin panel
  */
     try {
         if (isset($_REQUEST['add_admin'])) {

@@ -1,6 +1,6 @@
 <?php
     $host = 'localhost';
-    $db = 'project';
+    $db = 'nodejs';
     $user = 'admin';
     $pass = 'qwerty';
     $charset = 'utf8';
