@@ -1,0 +1,44 @@
+.disable {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+a {
+    text-decoration: none;
+}
+
+form.user, .article, .maps, .gallery {
+    padding-top: 2%;
+    text-align: center;
+}
+
+form input {
+    text-align: center;
+    border-radius: 12px;
+    padding: 4px;
+}
+
+form button {
+    text-align: center;
+    border-radius: 12px;
+    padding: 7px 15px;
+}
+
+textarea {
+    height: 523px;
+    width: 1058px;
+    resize: none;
+}
+
+.description_map {
+    height: 100px;
+    width: 370px;
+}
+
+select {
+    border-radius: 12px;
+    padding: 5px 10px;
+}
